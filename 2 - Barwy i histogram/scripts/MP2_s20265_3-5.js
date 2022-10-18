@@ -36,14 +36,18 @@ function imgToHsv(img, img_h, img_s, img_v) {
             //img.pixels[pos + 3] = 255;//to jest wartość dla A
 
             let cmax = Math.max(r, g, b);
-            // let cmin = Math.min(r, g, b);
+            let cmin = Math.min(r, g, b);
 
             let v = cmax;
 
             let px = (pos / 4) % 256;//indeks kolumny wewnątrz wiersza
             let py = (pos / 4) / 256;//indeks wiersza
 
-            img_v.set(px, py, 255 * v);
+            // img_v.set(px, py, 255 * v);
+
+            let l = (cmax + cmin) / 2;
+
+            img_v.set(px, py, 255 * l);
         }
     img_v.updatePixels();
 }
