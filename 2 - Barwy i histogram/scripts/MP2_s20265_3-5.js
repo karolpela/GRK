@@ -38,7 +38,7 @@ function imgToHsv(img, img_h, img_s, img_v) {
             let cmax = Math.max(r, g, b);
             let cmin = Math.min(r, g, b);
 
-            let v = cmax;
+            // let v = cmax;
 
             let px = (pos / 4) % 256;//indeks kolumny wewnątrz wiersza
             let py = (pos / 4) / 256;//indeks wiersza

@@ -1,35 +1,79 @@
-function draw() {
-    //noprotect;
-    background(200, 200, 255);
-    for (let y = 0; y < height; y++)
-        for (let x = 0; x < width; x++) {
-            if (y > height - 180) {
-                grassAndFlowers(x, y);
-            }
-            // fasada
-            else if (y > height - 380 && (x > width / 2 - 200 && x < width / 2 + 200)) {
-                set(x, y, color(100, 50, 30));
-            }
-        }
-    roof();
-    updatePixels();
+let img;
+let img_h;
+let img_s;
+let img_v;
+
+function preload() {
+    img = loadImage("https://raw.githubusercontent.com/scikit-image/scikit-image/master/skimage/data/astronaut.png");
+    img_h = createImage(256, 256);
+    img_s = createImage(256, 256);
+    img_v = createImage(256, 256);
 }
 
-function roof() {
-    for (let y = 30, w = 0; y < 181; y++, w += 2) {
-        for (let x = 0; x < width; x++) {
-            if (x > width / 2 - w && x < width / 2 + w) {
-                set(x, y, color(255, 100, 100));
-            }
-        }
-    }
+function setup() {
+    createCanvas(512, 512);
+    img.resize(256, 256);
+    imgToHsv(img, img_h, img_s, img_v);
+
+    image(img_h, 0, 0);
+    image(img_s, 256, 0);
+    image(img_v, 0, 256);
+
+    image(img, 256, 256);
+
+    noLoop();
 }
 
-function grassAndFlowers(x, y) {
-    let r = floor(random(0, 200));
-    if (r <= 1) {
-        set(x, y, color(floor(random(0, 255)), floor(random(0, 255)), floor(random(0, 255))));
-    } else {
-        set(x, y, color(0, 100, 0));
-    }
+function imgToHsv(img, img_h, img_s, img_v) {
+    img.loadPixels();
+    img_h.loadPixels()
+    img_v.loadPixels()
+    img_s.loadPixels()
+    for (let x = 0; x < img.width; x++)
+        for (let y = 0; y < img.height; y++) {
+            let pos = 4 * (y * img.width + x);
+            let r = img.pixels[pos] / 255 //to jest wartość dla R
+            let g = img.pixels[pos + 1] / 255;//to jest wartość dla G
+            let b = img.pixels[pos + 2] / 255;//to jest wartość dla B
+            //img.pixels[pos + 3] = 255;//to jest wartość dla A
+
+            let cmax = Math.max(r, g, b);
+            let cmin = Math.min(r, g, b);
+
+            let v = cmax;
+
+            let c = cmax - cmin; // chromatyczność
+
+            let s; // saturacja
+
+            if (cmax != 0) {
+                s = c / cmax
+            } else {
+                s = 0;
+            }
+
+            let h; // odcień
+
+            if (c == 0)
+                h = 0;
+            else if (v == r)
+                h = ((g - b) / c) % 6;
+            else if (v == g)
+                h = ((b - r) / c) + 2;
+            else /*v==b*/
+                h = ((r - g) / c) + 4;
+
+            h /= 6; // normalizacja
+            if (h < 0) h += 1; // zawijanie
+
+            let px = (pos / 4) % 256;//indeks kolumny wewnątrz wiersza
+            let py = (pos / 4) / 256;//indeks wiersza
+
+            img_h.set(px, py, 255 * h);
+            img_s.set(px, py, 255 * s);
+            img_v.set(px, py, 255 * v);
+        }
+    img_h.updatePixels();
+    img_s.updatePixels();
+    img_v.updatePixels();
 }

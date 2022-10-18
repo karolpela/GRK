@@ -1,40 +1,41 @@
-function draw() {
-    //noprotect;
+let img;
 
-    let x1 = 300; let y1 = 100;
-    let x2 = 100; let y2 = 500;
-    let x3 = 500; let y3 = 500;
+function preload() {
+    img = loadImage("https://raw.githubusercontent.com/scikit-image/scikit-image/master/skimage/data/astronaut.png");
+}
 
-    background(0);
+function setup() {
+    createCanvas(256, 256);
+    img.resize(256, 256);
+    img.filter('gray');
 
-    stroke(255);
+    drawHistogram(img);
 
-    point(x1, y1);
-    point(x2, y2);
-    point(x3, y3);
+    noLoop();
+}
 
-    let cx = x1;
-    let cy = y1;
+function drawHistogram(img) {
+    let histogram = new Array(256);
+    histogram.fill(0);
 
-    for (let i = 0; i < 30000; i++) {
-        let r = floor(random(0, 3));
-        switch (r) {
-            case 0:
-                cx = (cx + x1) / 2;
-                cy = (cy + y1) / 2;
-                point(cx, cy);
-                break;
-            case 1:
-                cx = (cx + x2) / 2;
-                cy = (cy + y2) / 2;
-                point(cx, cy);
-                break;
-            case 2:
-                cx = (cx + x3) / 2;
-                cy = (cy + y3) / 2;
-                point(cx, cy);
-                break;
+    img.loadPixels();
+
+    for (let x = 0; x < img.width; x++)
+        for (let y = 0; y < img.height; y++) {
+            let pos = 4 * (y * img.width + x);
+            //img.pixels[pos];//to jest wartość dla R
+            //img.pixels[pos + 1];//to jest wartość dla G
+            //img.pixels[pos + 2];//to jest wartość dla B
+            //img.pixels[pos + 3] = 255;//to jest wartość dla A
+            histogram[img.pixels[pos]] += 1;
         }
+
+
+    background(255);
+    stroke(0);
+
+    let maxVal = Math.max(...histogram);
+    for (let x = 0; x < img.width; x++) {
+        line(x, 255, x, 255 - histogram[x] / maxVal * 256 * 10);
     }
-    updatePixels();
 }
