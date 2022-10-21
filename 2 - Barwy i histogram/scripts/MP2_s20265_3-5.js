@@ -40,14 +40,14 @@ function imgToHsv(img, img_h, img_s, img_v) {
 
             // let v = cmax;
 
-            let px = (pos / 4) % 256;//indeks kolumny wewnątrz wiersza
-            let py = (pos / 4) / 256;//indeks wiersza
+            // let px = (pos / 4) % 256;//indeks kolumny wewnątrz wiersza
+            // let py = (pos / 4) / 256;//indeks wiersza
 
             // img_v.set(px, py, 255 * v);
 
             let l = (cmax + cmin) / 2;
 
-            img_v.set(px, py, 255 * l);
+            img_v.set(x, y, 255 * l);
         }
     img_v.updatePixels();
 }
