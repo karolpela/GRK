@@ -1,0 +1,18 @@
+{
+    "plugins": [
+        "html"
+    ],
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "@fal-works/p5js"
+    ],
+    "overrides": [],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {}
+}
