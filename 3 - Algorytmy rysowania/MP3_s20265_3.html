@@ -61,9 +61,7 @@
             let b = y0 - a * x0;
 
             for (let i = 0; i < abs(x1 - x0); i++) {
-
-
-                let x = Math.round(x0 + i * Math.sign(x1 - x0));
+                let x = x0 + i * Math.sign(x1 - x0);
                 let y = Math.round(a * x + b);
                 set_pixel(x, y, 0)
             }
